@@ -402,7 +402,7 @@ LocalPlayer.Idled:Connect(function()
     VirtualUserRef:ClickButton2(Vector2.new())
 end)
 
-local MengHubUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Slnckyami/NewSilence/refs/heads/main/SlncGui.lua"))()
+local MengHubUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/zhidanptrsyh/MengHub/refs/heads/main/main.lua"))()
 local Window = MengHubUI:CreateWindow({
     Title = "Silence - Fish It",
     Icon = "rbxassetid://78018573702743",
