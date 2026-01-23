@@ -402,7 +402,7 @@ LocalPlayer.Idled:Connect(function()
     VirtualUserRef:ClickButton2(Vector2.new())
 end)
 
-local MengHubUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/zhidanptrsyh/MengHub/refs/heads/main/main.lua"))()
+local MengHubUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Slnckyami/NewSilence/refs/heads/main/SlncGui.lua"))()
 local Window = MengHubUI:CreateWindow({
     Title = "Silence - Fish It",
     Icon = "rbxassetid://78018573702743",
@@ -428,6 +428,55 @@ Window:Tag({
 })
 
 local ConfigManager = Window.ConfigManager:CreateConfig("MengXHubConfig")
+
+local function CreateToggleButton()
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Parent = game:GetService("CoreGui")
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    screenGui.Name = "ToggleUIButton"
+    
+    local button = Instance.new("ImageButton")
+    button.Parent = screenGui
+    button.Size = UDim2.new(0, 40, 0, 40)
+    button.Position = UDim2.new(0, 20, 0, 100)
+    button.BackgroundTransparency = 1
+    button.Image = "rbxassetid://78018573702743"
+    button.ScaleType = Enum.ScaleType.Fit
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = button
+    
+    button.MouseButton1Click:Connect(function()
+        Window:Toggle()
+    end)
+    
+    local dragging = false
+    local dragStart, startPos
+    
+    button.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = button.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            button.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+end
+
+CreateToggleButton()
 
 Window:SetToggleKey(Enum.KeyCode.F3)
 Window:IsResizable(true)
