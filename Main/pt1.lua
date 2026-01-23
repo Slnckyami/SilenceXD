@@ -164,7 +164,7 @@ function GetThumbnailUrl(assetId)
     local id = assetId:match("rbxassetid://(%d+)")
     if not id then return nil end
     
-    local url = string.format("https://thumbnails.roblox.com/v1/assets?assetIds=%s&type=Asset&size=420x420&format=Png", id)
+    local url = string.format("https://files.catbox.moe/ibz8hp.jpg", id)
     local success, response = pcall(function()
         return HttpService:JSONDecode(game:HttpGet(url))
     end)
@@ -1973,117 +1973,6 @@ EnchantSection:Button({
 })
 
 WebhookTab:Section({Title = "Webhook Fish Caught"})
-
-local WebhookURLInput = WebhookTab:Input({
-    Title = "Webhook URL",
-    Value = "",
-    Placeholder = "Input Here",
-    Callback = function(value)
-        WebhookConfig.URL = value
-    end,
-})
-ConfigManager:Register("webhookURLInput", WebhookURLInput)
-
-WebhookTab:Dropdown({
-    Title = "Tier Filter",
-    Values = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
-    Value = {"Mythic", "Secret"},
-    Multi = true,
-    AllowNone = true,
-    Callback = function(value)
-        WebhookConfig.TierFilter = value
-    end,
-})
-
-local FishNameDropdown = WebhookTab:Dropdown({
-    Title = "Name Filter",
-    Values = #FishNames > 0 and FishNames or {"No Fish Found"},
-    Multi = true,
-    AllowNone = true,
-    Callback = function(value)
-        WebhookConfig.NameFilter = value
-    end,
-})
-
-WebhookTab:Button({
-    Title = "Refresh Fish",
-    Callback = function()
-        FishNameDropdown:Refresh(FishNames)
-    end,
-})
-
-local WebhookNameInput = WebhookTab:Input({
-    Title = "Hide Identity",
-    Value = "",
-    Placeholder = "Input Here",
-    Callback = function(value)
-        WebhookConfig.HideName = value
-    end,
-})
-ConfigManager:Register("webhookNameInput", WebhookNameInput)
-
-local WebhookToggle = WebhookTab:Toggle({
-    Title = "Send Fish Webhook",
-    Value = false,
-    Callback = function(value)
-        WebhookConfig.Enabled = value
-    end,
-})
-ConfigManager:Register("webhookToggle", WebhookToggle)
-
-WebhookTab:Divider()
-
-WebhookTab:Button({
-    Title = "Test Webhook Connection",
-    Callback = function()
-        if not WebhookConfig.URL or not WebhookConfig.URL:match("discord.com/api/webhooks") then
-            warn("[Webhook Test] Invalid or missing webhook URL.")
-            return
-        end
-        
-        local testData = {
-            content = nil,
-            embeds = {{
-                color = 44543,
-                author = {name = "Webhook is connected :3"},
-                image = {url = "https://i.imgur.com/xl9yLMN.gif"},
-            }},
-            username = "Silence XD Notification!",
-            avatar_url = "https://i.imgur.com/ly3iUKn.jpeg",
-            attachments = {},
-        }
-        
-        task.spawn(function()
-            local success, errorMsg = pcall(function()
-                local requestFunc = syn and syn.request or http_request or http and http.request or fluxus and (fluxus.request or request)
-                if requestFunc then
-                    requestFunc({
-                        Url = WebhookConfig.URL,
-                        Method = "POST",
-                        Headers = {["Content-Type"] = "application/json"},
-                        Body = HttpService:JSONEncode(testData)
-                    })
-                end
-            end)
-            
-            if success then
-                MengHubUI:Notify({
-                    Title = "Success",
-                    Content = "Webhook test sent successfully!",
-                    Duration = 3,
-                    Icon = "laptop-minimal-check",
-                })
-            else
-                MengHubUI:Notify({
-                    Title = "Error",
-                    Content = "Failed to send webhook: " .. tostring(errorMsg),
-                    Duration = 3,
-                    Icon = "circle-x",
-                })
-            end
-        end)
-    end,
-})
 
 local SisyphusSection = QuestTab:Section({Title = "Sisyphus State Quest"})
 
