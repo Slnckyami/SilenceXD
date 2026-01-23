@@ -164,7 +164,7 @@ function GetThumbnailUrl(assetId)
     local id = assetId:match("rbxassetid://(%d+)")
     if not id then return nil end
     
-    local url = string.format("https://files.catbox.moe/ibz8hp.jpg", id)
+    local url = string.format("https://thumbnails.roblox.com/v1/assets?assetIds=%s&type=Asset&size=420x420&format=Png", id)
     local success, response = pcall(function()
         return HttpService:JSONDecode(game:HttpGet(url))
     end)
